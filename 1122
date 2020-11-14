@@ -1,0 +1,38 @@
+//将arr[1]的元素存入map，之后遍历arr2,遇到map中存在的，就把对应的元素填入结果集(可能有多个元素)，并将map中该元素个数置为-1
+//最后map中个value不为-1的key，就说明arr2中不存在，放入结果集最后，再对结果集后几位排序即可。
+class Solution {
+    public int[] relativeSortArray(int[] arr1, int[] arr2) {
+        if(arr1.length==0||arr2.length==0){
+            return arr1;
+        }
+        Map<Integer,Integer> map = new HashMap<>();
+        for(int i=0;i<arr1.length;i++){
+            if(map.containsKey(arr1[i])){
+                map.put(arr1[i],map.get(arr1[i])+1);
+            }else{
+                map.put(arr1[i],1);
+            }
+        }
+        int count = 0;
+        int res[] = new int[arr1.length];
+        for(int i=0;i<arr2.length;i++){
+            if(!map.containsKey(arr2[i])){
+                continue;
+            }
+            int length = count;
+            for(int j=length;j<map.get(arr2[i])+length;j++){
+                res[j] = arr2[i];
+            }
+            count+=map.get(arr2[i]);
+            map.put(arr2[i],-1);
+        }
+        int k = count;
+        for(int i=0;i<arr1.length&&k<arr1.length;i++){
+            if(map.get(arr1[i])!=-1){
+                res[k++] = arr1[i];
+            }
+        }
+        Arrays.sort(res,count,arr1.length);
+        return res;
+    }
+}
